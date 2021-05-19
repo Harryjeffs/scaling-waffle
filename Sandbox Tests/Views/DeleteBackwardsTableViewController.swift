@@ -50,18 +50,22 @@ class DeleteBackwardsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.main.async {
             tableView.deselectRow(at: indexPath, animated: true)
-            tableView.beginUpdates()
+            //tableView.beginUpdates()
             var allIndexPaths = [IndexPath]()
             for index in 0...indexPath.row {
                 allIndexPaths.append(.init(row: index, section: 0))
             }
             self.tableData.removeSubrange(0...indexPath.row)
-            tableView.deleteRows(at: allIndexPaths, with: .fade)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            tableView.performBatchUpdates {
+                tableView.deleteRows(at: allIndexPaths, with: .fade)
+            } completion: { _ in
                 tableView.reloadSections(IndexSet(integer: 0), with: .none)
             }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+//                tableView.reloadSections(IndexSet(integer: 0), with: .none)
+//            }
             
-            tableView.endUpdates()
+            //tableView.endUpdates()
         }
 //        tableView.visibleCells.forEach { cell in
 //            guard let cell = cell as? CustomCell,
